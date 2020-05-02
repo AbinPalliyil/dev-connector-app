@@ -14,7 +14,6 @@ const User = require('../../models/User');
 router.get('/', auth, async (req, res) => {
 	try {
 		const user = await User.findById(req.user.id).select('-password');
-		4;
 		res.json(user);
 	} catch (error) {
 		console.log(error.message);
@@ -33,7 +32,6 @@ router.post(
 		check('password', 'password is required').not().isEmpty(),
 	],
 	async (req, res) => {
-        debugger;
 		//validation error
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
@@ -42,12 +40,12 @@ router.post(
 		// Fetch user details
 		const { email, password } = req.body;
 		try {
-			let user = await User.find({ email });
+			let user = await User.findOne({ email });
 			if (!user) {
 				return res.status(400).json({ msg: 'Invalid credentials' });
 			}
 			// Compare password
-			const isMatch = bcyrpt.compare(password, user.password);
+			const isMatch = await bcyrpt.compare(password, user.password);
 			if (!isMatch) {
 				return res.status(400).json({ msg: 'Invalid credentials' });
 			}

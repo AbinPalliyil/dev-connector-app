@@ -39,12 +39,11 @@ router.post(
 		check('skills', 'Skills is required').not().isEmpty(),
 	],
 	async (req, res) => {
-		debugger;
-
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			return res.status(400).json({ errors: errors.array() });
 		}
+		try {
 		const {
 			company,
 			website,
@@ -53,8 +52,6 @@ router.post(
 			skills,
 			bio,
 			githubusername,
-			experience,
-			education,
 			youtube,
 			twitter,
 			instagram,
@@ -63,16 +60,14 @@ router.post(
 		} = req.body;
 
 		const profileFields = {};
-		(profileFields.user = req.user.id),
-			(profileFields.company = company && company);
+		profileFields.user = req.user.id,
+		profileFields.company = company && company;
 		profileFields.website = website && website;
 		profileFields.location = location && location;
 		profileFields.bio = bio && bio;
 		profileFields.githubusername = githubusername && githubusername;
-		profileFields.skills =
-			skills && skills.split(',').map((skill) => skill.trim());
+		profileFields.skills = skills && skills.split(',').map((skill) => skill.trim());
 		profileFields.status = status && status;
-		//  profileFields.skills = skills && skills.split(',').map(skill => skill.trim());
 		profileFields.social = {};
 		profileFields.social.youtube = youtube && youtube;
 		profileFields.social.facebook = facebook && facebook;
@@ -80,7 +75,7 @@ router.post(
 		profileFields.social.instagram = instagram && linkedin;
 		profileFields.social.twitter = twitter && twitter;
 
-		try {
+		
 			let profile = await Profile.findOne({ user: req.user.id });
 			if (profile) {
 				profile = await Profile.findOneAndUpdate(
@@ -169,25 +164,25 @@ router.put(
 			location,
 			current,
 			description,
-        } = req.body;
-        
-        const newExp = {
-            company,
+		} = req.body;
+
+		const newExp = {
+			company,
 			title,
 			from,
 			to,
 			location,
 			current,
 			description,
-        }
+		};
 		try {
-            const profile = await Profile.findOne({user: req.user.id});
-            profile.experience.unshift(newExp);
-            await profile.save();
-            return res.json(profile);
+			const profile = await Profile.findOne({ user: req.user.id });
+			profile.experience.unshift(newExp);
+			await profile.save();
+			return res.json(profile);
 		} catch (err) {
-            console.log(err.message)
-        }
+			console.log(err.message);
+		}
 	},
 );
 
@@ -195,21 +190,19 @@ router.put(
 //@desc Delete experience using exp_id
 //@acess Private
 router.delete('/experience/:expid', auth, async (req, res) => {
-    try {
-        const profie = await Profile.findOne({user: req.user.id});
-        const removeindex= profie.experience
-        .map(item => item.id)
-        .indexOf(req.params.expid);
-        
-        profie.experience.splice(removeindex, 1);
-        await profie.save();
-        res.send(profie);
+	try {
+		const profie = await Profile.findOne({ user: req.user.id });
+		const removeindex = profie.experience
+			.map((item) => item.id)
+			.indexOf(req.params.expid);
 
-        
-    } catch (err) {
-        console.log(err.message)        
-    }
-})
+		profie.experience.splice(removeindex, 1);
+		await profie.save();
+		res.send(profie);
+	} catch (err) {
+		console.log(err.message);
+	}
+});
 
 //@route Put api/profile/education
 //@desc Update user education in profile
@@ -236,25 +229,25 @@ router.put(
 			to,
 			current,
 			description,
-        } = req.body;
-        
-        const newExp = {
-           degree,
+		} = req.body;
+
+		const newExp = {
+			degree,
 			school,
 			fieldofstudy,
 			from,
 			to,
 			current,
 			description,
-        }
+		};
 		try {
-            const profile = await Profile.findOne({user: req.user.id});
-            profile.education.unshift(newExp);
-            await profile.save();
-            return res.json(profile);
+			const profile = await Profile.findOne({ user: req.user.id });
+			profile.education.unshift(newExp);
+			await profile.save();
+			return res.json(profile);
 		} catch (err) {
-            console.log(err.message)
-        }
+			console.log(err.message);
+		}
 	},
 );
 
@@ -262,21 +255,19 @@ router.put(
 //@desc Delete education using eduid
 //@acess Private
 router.delete('/education/:eduid', auth, async (req, res) => {
-    try {
-        const profie = await Profile.findOne({user: req.user.id});
-        const removeindex= profie.education
-        .map(item => item.id)
-        .indexOf(req.params.eduid);
-        
-        profie.education.splice(removeindex, 1);
-        await profie.save();
-        res.send(profie);
+	try {
+		const profie = await Profile.findOne({ user: req.user.id });
+		const removeindex = profie.education
+			.map((item) => item.id)
+			.indexOf(req.params.eduid);
 
-        
-    } catch (err) {
-        console.log(err.message)        
-    }
-})
+		profie.education.splice(removeindex, 1);
+		await profie.save();
+		res.send(profie);
+	} catch (err) {
+		console.log(err.message);
+	}
+});
 
 //@route Get /api/profile/github/:username
 //Get user repos
@@ -287,34 +278,28 @@ router.get('/github/:username', (req, res) => {
 		const gitClientId = config.get('gitClientId');
 		const gitClientsecret = config.get('gitClientSecret');
 		const option = {
-			url: 
-			`https://api.github.com/users/${username}/repos
-			?per_page=5
+			url: `https://api.github.com/users/${username}/repos?per_page=5
 			&sort=created:asc
 			&client_id=${gitClientId}
 			&client_secret=${gitClientsecret}`,
-			method: "GET",
-			headers: {'user-agent': 'node.js'}
-
-		}
+			method: 'GET',
+			headers: { 'user-agent': 'node.js' },
+		};
 
 		request(option, (error, response, body) => {
-			if(error){
-				console.log(error)
-				return res.status(400).json({msg: "No Github profile found"});
-
+			if (error) {
+				console.log(error);
+				return res.status(400).json({ msg: 'No Github profile found' });
 			}
-			if(response.statusCode !== 200) {
-				return res.status(400).json({msg: "No Github profile found"});
+			if (response.statusCode !== 200) {
+				return res.status(400).json({ msg: 'No Github profile found' });
 			}
 			res.json(JSON.parse(body));
-		})
-
-		
+		});
 	} catch (err) {
 		console.log(err.message);
-		return res.status(500).send("Server side error")
+		return res.status(500).send('Server side error');
 	}
-})
+});
 
 module.exports = router;
