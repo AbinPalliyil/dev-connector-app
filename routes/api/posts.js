@@ -54,4 +54,49 @@ router.get('/', auth, async(req, res) => {
     }
 })
 
+//@route Get api/post/:post_id
+//@desc Fetch  posts using post_id
+//@access Private
+router.get('/:post_id', auth, async(req, res) => {
+    try {
+        const post= await Post.findById({_id: req.params.post_id});
+        if(!post){
+            return res.status(400).json({msg: "No posts found"})
+        }
+        res.json(post);
+        
+    } catch (err) {
+        if(err.kind ==='ObjectId'){
+            return res.status(400).json({msg: "No posts found"})
+
+        }
+        return res.status(500).send("Server side error");
+    }
+})
+
+//@route Delete /api/posts/:post_id
+//@desc Delete post using post_id
+//@accees Private
+router.delete('/:post_id', auth, async(req, res) => {
+    try {
+        const post = await Post.findById(req.params.post_id);
+        if(!post){
+            return res.status(400).json({msg: "No posts found"})
+        }
+        if(post.user.toString() !== req.user.id){
+            return res.status(401).json({msg: "Unauthorized user"});
+        }
+        await post.remove();
+        res.json({msg: "Post removed succecfully"})
+        
+    } catch (error) {
+        if(err.kind ==='ObjectId'){
+            return res.status(400).json({msg: "No posts found"})
+
+        }
+        return res.status(500).send("Server side error");
+    }
+})
+
+
 module.exports = router;
