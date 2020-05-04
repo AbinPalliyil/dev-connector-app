@@ -12,7 +12,7 @@ const App = () =>
     <Navbar />
   <Route path="/" exact component={Landing} />
 
-  <section class="container">
+  <section className="container">
   <Switch>
   <Route path="/login" exact component={Login} />
   <Route path="/register" exact component={Register} />
