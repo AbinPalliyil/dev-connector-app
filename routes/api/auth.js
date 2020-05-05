@@ -42,7 +42,7 @@ router.post(
 		try {
 			let user = await User.findOne({ email });
 			if (!user) {
-				return res.status(400).json({ msg: 'Invalid credentials' });
+				return res.status(400).json( {errors: [ {value: "", msg: "Invalid Credentials", param: "password", location: "body"}]});
 			}
 			// Compare password
 			const isMatch = await bcyrpt.compare(password, user.password);
