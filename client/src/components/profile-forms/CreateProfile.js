@@ -1,7 +1,10 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { createProfile } from '../../actions/profile';
+import { withRouter } from 'react-router-dom';
 
-const CreateProfile = (props) => {
+const CreateProfile = ({ createProfile, history }) => {
 	const [formData, setFormData] = useState({
 		company: '',
 		website: '',
@@ -32,11 +35,17 @@ const CreateProfile = (props) => {
 		linkedin,
 	} = formData;
 
+	//Toggle social network inputs
+	const [displaySocialInputs, toggleSocialInputs] = useState(false);
+
+	const onsubmit = (e) => {
+		e.preventDefault();
+		createProfile(formData, history);
+	};
+
 	const onChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
-
-	const [displaySocialInputs, toggleSocialInputs] = useState(false);
 
 	return (
 		<Fragment>
@@ -46,7 +55,7 @@ const CreateProfile = (props) => {
 				make your profile stand out
 			</p>
 			<small>* = required field</small>
-			<form className='form'>
+			<form className='form' onSubmit={(e) => onsubmit(e)}>
 				<div className='form-group'>
 					<select
 						name='status'
@@ -151,9 +160,9 @@ const CreateProfile = (props) => {
 					<button
 						type='button'
 						className='btn btn-light'
-						onClick={() => toggleSocialInputs(
-							!displaySocialInputs,
-						)}>
+						onClick={() =>
+							toggleSocialInputs(!displaySocialInputs)
+						}>
 						Add Social Network Links
 					</button>
 					<span>Optional</span>
@@ -210,6 +219,8 @@ const CreateProfile = (props) => {
 								type='text'
 								placeholder='Instagram URL'
 								name='instagram'
+								value={instagram}
+								onChange={(e) => onChange(e)}
 							/>
 						</div>
 					</Fragment>
@@ -224,6 +235,19 @@ const CreateProfile = (props) => {
 	);
 };
 
-CreateProfile.propTypes = {};
+CreateProfile.propTypes = {
+	createProfile: PropTypes.func.isRequired,
+};
 
-export default CreateProfile;
+const mapStateToProps = (store) => ({});
+
+const mapDispatchToProps = {
+	createProfile,
+};
+
+const rdxCreateProfile = connect(
+	mapStateToProps,
+	mapDispatchToProps,
+)(CreateProfile);
+
+export default withRouter(rdxCreateProfile);
