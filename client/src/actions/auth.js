@@ -10,15 +10,16 @@ import {
 } from '../actions/type';
 import { setAlert } from './alert';
 import setAuthToken from '../utils/setAuthToken';
+import configUrl from '../utils/config';
 
 //Load user
 export const loadUser = () => async (dispatch) => {
 	if (localStorage.token) {
 		setAuthToken(localStorage.token);
-	}
+	
 
 	try {
-		const res = await axios.get('http://localhost:5000/api/auth');
+		const res = await axios.get(`${configUrl.url}/api/auth`);
 		dispatch({
 			type: USER_LOADED,
 			payload: res.data,
@@ -28,6 +29,7 @@ export const loadUser = () => async (dispatch) => {
 			type: AUTH_ERROR,
 		});
 	}
+}
 };
 
 // Register user
@@ -39,7 +41,7 @@ export const register = (user) => async (dispatch) => {
 
 	try {
 		const res = await axios.post(
-			'http://localhost:5000/api/users',
+			`${configUrl.url}/api/users`,
 			body,
 			config,
 		);
@@ -72,7 +74,7 @@ export const login = (email, password) => async (dispatch) => {
 	const body = JSON.stringify({ email, password });
 	try {
 		const res = await axios.post(
-			'http://localhost:5000/api/auth',
+			`${configUrl.url}/api/auth`,
 			body,
 			config,
 		);
