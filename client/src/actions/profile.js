@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { setAlert } from './alert';
-import { GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE } from './type';
+import {ACCOUNT_DELETED, GET_PROFILE, PROFILE_ERROR, CLEAR_PROFILE, UPDATE_PROFILE } from './type';
 import configUrl from '../utils/config';
 import setAuthToken from '../utils/setAuthToken';
-import { body } from 'express-validator';
 
 // Get current user profile
 export const getCurrentProfile = () => async (dispatch) => {
@@ -167,3 +166,64 @@ export const addEducation = (education, history) => async (dispatch) => {
 		dispatch(setAlert('Please try again', 'danger'));
 	}
 };
+
+// Delete experience
+export const deleteExperience = id => async dispatch => {
+	try {
+	const res = await axios.delete(`${configUrl.url}/api/profile/experience/${id}`);
+	dispatch({
+		type: UPDATE_PROFILE,
+		payload: res.data
+	})
+
+	dispatch(setAlert('Experience Removed', 'success'));
+	} catch (err) {
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: {msg: err.response.statusText, status: err.response.status}
+		})
+	}
+}
+
+// Delete Education
+export const deleteEducation = id => async dispatch => {
+	try {
+	const res = await axios.delete(`${configUrl.url}/api/profile/education/${id}`);
+	dispatch({
+		type: UPDATE_PROFILE,
+		payload: res.data
+	})
+
+	dispatch(setAlert('Education Removed', 'success'));
+	} catch (err) {
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: {msg: err.response.statusText, status: err.response.status}
+		})
+	}
+}
+
+// Delet account/profile
+export const deleteAccount = ()  => async dispatch => {
+	if(window.confirm('Are you sure want to delete account?')){
+		
+	try {
+	const res = await axios.delete(`${configUrl.url}/api/profile`);
+	dispatch({
+		type: CLEAR_PROFILE,
+	})
+
+	dispatch({
+		type: ACCOUNT_DELETED
+	})
+
+	dispatch(setAlert('Your Account Removed', 'success'));
+	} catch (err) {
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: {msg: err.response.statusText, status: err.response.status}
+		})
+	}
+}
+}
+

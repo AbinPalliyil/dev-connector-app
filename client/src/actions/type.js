@@ -3,6 +3,7 @@ export const REMOVE_ALERT = 'REMOVE_ALERT';
 export const SET_ALERT = 'SET_ALERT';
 //Auth
 export const AUTH_ERROR = 'AUTH_ERROR';
+export const ACCOUNT_DELETED = 'ACCOUNT_DELETED'
 export const LOGIN_SUCEESS = 'LOGIN_SUCEESS';
 export const LOGIN_FAILED = 'LOGIN_FAILED';
 export const LOGOUT = 'LOGOUT';
