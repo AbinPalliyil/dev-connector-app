@@ -52,7 +52,7 @@ export const register = (user) => async (dispatch) => {
 
 	} catch (error) {
 		const errors =
-			error && error.response.data && error.response.data.errors;
+			error && error.response && error.response.data && error.response.data.errors;
 		if (errors) {
 			errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
 		} else {

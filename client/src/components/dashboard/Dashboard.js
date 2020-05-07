@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { getCurrentProfile } from '../../actions/profile';
 import Spinner from '../layout/Spinner';
 import { Link } from 'react-router-dom';
+import DasboardAction from './DasboardAction';
 
 function Dashboard({
 	auth: { user },
@@ -22,7 +23,9 @@ function Dashboard({
 				<i className='fas fa-user'></i> Welcome {user && user.name}
 			</p>
 			{profile !== null ? (
-				<Fragment>has</Fragment>
+				<Fragment>
+					<DasboardAction />
+				</Fragment>
 			) : (
 				<Fragment>
 					<p>You have not setup a profile, please add some info</p>
@@ -41,9 +44,9 @@ Dashboard.propTypes = {
 	getCurrentProfile: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (store) => ({
-	auth: store.auth,
-	profile: store.profile,
+const mapStateToProps = (state) => ({
+	auth: state.auth,
+	profile: state.profile,
 });
 
 const mapDispatchToProps = {

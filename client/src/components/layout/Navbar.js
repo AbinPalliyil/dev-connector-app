@@ -47,8 +47,8 @@ const Navbar = ({ logout, auth: { isAuthenticated, loading } }) => {
 	);
 };
 
-const mapStateToProps = (store) => ({
-	auth: store.auth,
+const mapStateToProps = (state) => ({
+	auth: state.auth,
 });
 
 export default connect(mapStateToProps, { logout })(Navbar);

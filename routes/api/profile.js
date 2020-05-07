@@ -44,38 +44,39 @@ router.post(
 			return res.status(400).json({ errors: errors.array() });
 		}
 		try {
-		const {
-			company,
-			website,
-			location,
-			status,
-			skills,
-			bio,
-			githubusername,
-			youtube,
-			twitter,
-			instagram,
-			facebook,
-			linkedin,
-		} = req.body;
+			const {
+				company,
+				website,
+				location,
+				status,
+				skills,
+				bio,
+				githubusername,
+				youtube,
+				twitter,
+				instagram,
+				facebook,
+				linkedin,
+			} = req.body;
 
-		const profileFields = {};
-		profileFields.user = req.user.id,
-		profileFields.company = company && company;
-		profileFields.website = website && website;
-		profileFields.location = location && location;
-		profileFields.bio = bio && bio;
-		profileFields.githubusername = githubusername && githubusername;
-		profileFields.skills = skills && skills.split(',').map((skill) => skill.trim());
-		profileFields.status = status && status;
-		profileFields.social = {};
-		profileFields.social.youtube = youtube && youtube;
-		profileFields.social.facebook = facebook && facebook;
-		profileFields.social.linkedin = linkedin && linkedin;
-		profileFields.social.instagram = instagram && linkedin;
-		profileFields.social.twitter = twitter && twitter;
+			const profileFields = {};
+			(profileFields.user = req.user.id),
+				(profileFields.company = company && company);
+			profileFields.website = website && website;
+			profileFields.location = location && location;
+			profileFields.bio = bio && bio;
+			profileFields.githubusername = githubusername && githubusername;
+			profileFields.skills = Array.isArray(skills)
+				? skills
+				: skills && skills.split(',').map((skill) => skill.trim());
+			profileFields.status = status && status;
+			profileFields.social = {};
+			profileFields.social.youtube = youtube && youtube;
+			profileFields.social.facebook = facebook && facebook;
+			profileFields.social.linkedin = linkedin && linkedin;
+			profileFields.social.instagram = instagram && linkedin;
+			profileFields.social.twitter = twitter && twitter;
 
-		
 			let profile = await Profile.findOne({ user: req.user.id });
 			if (profile) {
 				profile = await Profile.findOneAndUpdate(

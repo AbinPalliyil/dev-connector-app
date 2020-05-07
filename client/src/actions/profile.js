@@ -16,13 +16,19 @@ export const getCurrentProfile = () => async (dispatch) => {
 			payload: res.data,
 		});
 	} catch (err) {
-		dispatch({
-			type: PROFILE_ERROR,
-			payload: {
-				msg: err.response.statusText,
-				status: err.response.status,
-			},
-		});
+		if(err && err.res) {
+		 return	dispatch({
+				type: PROFILE_ERROR,
+				payload: {
+					msg: err.response.statusText,
+					status: err.response.status,
+				},
+			});
+		}
+
+		dispatch(setAlert('Please try again', 'danger'));
+		
+		
 	}
 };
 
