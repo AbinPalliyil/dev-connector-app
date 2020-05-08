@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { setAlert } from './alert';
-import {ACCOUNT_DELETED, GET_PROFILE, PROFILE_ERROR, CLEAR_PROFILE, UPDATE_PROFILE } from './type';
+import {ACCOUNT_DELETED, GET_PROFILE, GET_ALL_PROFILES, PROFILE_ERROR, CLEAR_PROFILE, UPDATE_PROFILE } from './type';
 import configUrl from '../utils/config';
 import setAuthToken from '../utils/setAuthToken';
 
@@ -28,6 +28,55 @@ export const getCurrentProfile = () => async (dispatch) => {
 		dispatch(setAlert('Please try again', 'danger'));
 	}
 };
+
+
+// Get All profile
+export const getAllProfile = () => async (dispatch) => {
+	dispatch({type: CLEAR_PROFILE})
+	try {
+		const res = await axios.get(`${configUrl.url}/api/profile`);
+		dispatch({
+			type: GET_ALL_PROFILES,
+			payload: res.data,
+		});
+	} catch (err) {
+		if (err && err.response) {
+			return dispatch({
+				type: PROFILE_ERROR,
+				payload: {
+					msg: err.response.statusText,
+					status: err.response.status,
+				},
+			});
+		}
+		dispatch(setAlert('Please try again', 'danger'));
+	}
+};
+
+// Get profile by id
+export const getProById = userId => async (dispatch) => {
+	dispatch({type: CLEAR_PROFILE})
+	try {
+		const res = await axios.get(`${configUrl.url}/api/profile/user/${userId}`);
+		dispatch({
+			type: GET_PROFILE,
+			payload: res.data,
+		});
+	} catch (err) {
+		if (err && err.response) {
+			return dispatch({
+				type: PROFILE_ERROR,
+				payload: {
+					msg: err.response.statusText,
+					status: err.response.status,
+				},
+			});
+		}
+		dispatch(setAlert('Please try again', 'danger'));
+	}
+};
+
+
 
 // Crate/Edit profile
 export const createProfile = (profile, history, edit = false) => async (
@@ -208,7 +257,7 @@ export const deleteAccount = ()  => async dispatch => {
 	if(window.confirm('Are you sure want to delete account?')){
 		
 	try {
-	const res = await axios.delete(`${configUrl.url}/api/profile`);
+	await axios.delete(`${configUrl.url}/api/profile`);
 	dispatch({
 		type: CLEAR_PROFILE,
 	})

@@ -89,7 +89,6 @@ const AddExperience = ({ addExperience, history }) => {
 							type='checkbox'
 							value={current}
 							name='current'
-							value=''
 							onChange={(e) => {
 								setFormData({ ...formData, current: !current });
 								toogleTodateDisable(!toDateDisable);

@@ -62,7 +62,7 @@ const EditProfile = ({
 			facebook: loading || !profile.social ? '' : profile.social.facebook,
 			linkedin: loading || !profile.social ? '' : profile.social.linkedin,
 		});
-	}, [loading]);
+	}, [loading, getCurrentProfile]);
 
 	const onsubmit = (e) => {
 		e.preventDefault();

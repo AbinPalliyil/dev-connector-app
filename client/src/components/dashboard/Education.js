@@ -33,10 +33,12 @@ const Education = ({ education, deleteEducation }) => {
 			<h2 className='my-2'>Education Crdentials</h2>
 			<table className='table'>
 				<thead>
+					<tr>
 					<th>School</th>
 					<th className='hide-sm'>Degree</th>
 					<th className='hide-sm'>Years</th>
 					<th className='hide-sm'></th>
+					</tr>
 				</thead>
 
 				<tbody>{educations}</tbody>
@@ -47,7 +49,7 @@ const Education = ({ education, deleteEducation }) => {
 };
 
 Education.propTypes = {
-	Education: PropTypes.array.isRequired,
+	Education: PropTypes.array,
 	deleteEducation: PropTypes.func.isRequired,
 };
 

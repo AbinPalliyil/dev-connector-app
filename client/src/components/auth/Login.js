@@ -22,7 +22,7 @@ const Login = ({login, isAuthenticated}) => {
 		login(email, password)
 	};
 
-	const { name, email, password} = formData;
+	const {  email, password} = formData;
 	if(isAuthenticated){
 		return <Redirect to="/dashboard" />
 
