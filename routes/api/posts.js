@@ -109,7 +109,7 @@ router.put('/like/:post_id', auth, async (req, res) => {
 		}
 		post.likes.unshift({ user: req.user.id });
 		await post.save();
-		res.json(post.like);
+		res.json(post.likes);
 	} catch (err) {
 		if (err.kind === 'ObjectId') {
 			return res.status(400).json({ msg: 'No posts found' });
@@ -139,7 +139,7 @@ router.put('/unlike/:post_id', auth, async (req, res) => {
 		post.likes.splice(removeIdex, 1);
 
 		await post.save();
-		res.json(post.like);
+		res.json(post.likes);
 	} catch (err) {
 		if (err.kind === 'ObjectId') {
 			return res.status(400).json({ msg: 'No posts found' });
