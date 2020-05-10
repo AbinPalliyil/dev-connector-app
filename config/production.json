@@ -1,0 +1,8 @@
+{
+    "mongoURI" : 
+    "mongodb+srv://abin:devconnector@deveconnector-3kyij.mongodb.net/test?retryWrites=true&w=majority",
+    "jwtToken": "secret",
+    "gitClientId": "a37185b0450b94355602",
+    "gitClientSecret": "ee9c65b36de254dc133977cbf737bf1877a69618"
+
+}
