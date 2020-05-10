@@ -7,6 +7,8 @@ import {
 	DELETE_POST,
 	ADD_POST,
 	GET_SINGLE_POST,
+	ADD_COMMENT,
+	DELETE_COMMENT
 } from './type';
 import { setAlert } from './alert';
 
@@ -79,7 +81,7 @@ export const removeLike = (id) => async (dispatch) => {
 //Delete post
 export const removePost = (id) => async (dispatch) => {
 	try {
-		 await axios.delete(`${configUrl.url}/api/posts/${id}`);
+		await axios.delete(`${configUrl.url}/api/posts/${id}`);
 		dispatch({
 			type: DELETE_POST,
 			payload: id,
@@ -118,6 +120,17 @@ export const addPost = (post) => async (dispatch) => {
 		});
 		dispatch(setAlert('Post Added Successfull', 'success'));
 	} catch (err) {
+		const errors =
+			err &&
+			err.response &&
+			err.response.data &&
+			err.response.data.errors;
+		if (errors) {
+			return errors.forEach((error) =>
+				dispatch(setAlert(error.msg, 'danger')),
+			);
+		}
+
 		if (err && err.response) {
 			return dispatch({
 				type: POST_ERROR,
@@ -139,6 +152,76 @@ export const getSinglePost = (id) => async (dispatch) => {
 			type: GET_SINGLE_POST,
 			payload: res.data,
 		});
+	} catch (err) {
+		if (err && err.response) {
+			return dispatch({
+				type: POST_ERROR,
+				payload: {
+					msg: err.response.statusText,
+					status: err.response.status,
+				},
+			});
+		}
+		dispatch(setAlert('Please try again', 'danger'));
+	}
+};
+
+// Add comment
+export const addComment = (postId, formData) => async (dispatch) => {
+	try {
+		const config = {
+			headers: { 'Content-Type': 'application/json' },
+		};
+
+		const body = JSON.stringify(formData);
+
+		const res = await axios.post(
+			`${configUrl.url}/api/posts/comment/${postId}`,
+			body,
+			config,
+		);
+
+		dispatch({
+			type: ADD_COMMENT,
+			payload: res.data,
+		});
+		dispatch(setAlert('Comment Added successfully', 'sucess'));
+	} catch (err) {
+		const errors =
+			err &&
+			err.response &&
+			err.response.data &&
+			err.response.data.errors;
+		if (errors) {
+			return errors.forEach((error) =>
+				dispatch(setAlert(error.msg, 'danger')),
+			);
+		}
+
+		if (err && err.response) {
+			return dispatch({
+				type: POST_ERROR,
+				payload: {
+					msg: err.response.statusText,
+					status: err.response.status,
+				},
+			});
+		}
+		dispatch(setAlert('Please try again', 'danger'));
+	}
+};
+
+//Delete comment
+export const deleteComment = (postId, commentId) => async (dispatch) => {
+	try {
+		await axios.delete(
+			`${configUrl.url}/api/posts/comment/${postId}/${commentId}`,
+		);
+		dispatch(setAlert('Comment Deleted successfully', 'success'));
+		dispatch({
+			type: DELETE_COMMENT,
+			payload: commentId
+		})
 	} catch (err) {
 		if (err && err.response) {
 			return dispatch({
