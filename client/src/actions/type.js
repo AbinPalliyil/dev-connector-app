@@ -17,9 +17,9 @@ export const GET_ALL_PROFILES = 'GET_ALL_PROFILES';
 export const PROFILE_ERROR = 'PROFILE_ERROR';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 //POST
-export const ADD_POST = 'ADD_POST'
-export const DELETE_POST = 'DELETE_POST'
+export const ADD_POST = 'ADD_POST';
+export const DELETE_POST = 'DELETE_POST';
 export const GET_POST = 'GET_POST';
+export const GET_SINGLE_POST = 'GET_SINGLE_POST';
 export const POST_ERROR = 'POST_ERROR';
-export const UPDATE_LIKE = 'UPDATE_LIKE'
-
+export const UPDATE_LIKE = 'UPDATE_LIKE';

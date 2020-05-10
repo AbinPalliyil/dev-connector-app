@@ -1,6 +1,13 @@
 import axios from 'axios';
 import configUrl from '../utils/config';
-import { GET_POST, POST_ERROR, UPDATE_LIKE, DELETE_POST, ADD_POST } from './type';
+import {
+	GET_POST,
+	POST_ERROR,
+	UPDATE_LIKE,
+	DELETE_POST,
+	ADD_POST,
+	GET_SINGLE_POST,
+} from './type';
 import { setAlert } from './alert';
 
 // Get all posts
@@ -72,7 +79,7 @@ export const removeLike = (id) => async (dispatch) => {
 //Delete post
 export const removePost = (id) => async (dispatch) => {
 	try {
-		const res = await axios.delete(`${configUrl.url}/api/posts/${id}`);
+		 await axios.delete(`${configUrl.url}/api/posts/${id}`);
 		dispatch({
 			type: DELETE_POST,
 			payload: id,
@@ -94,19 +101,44 @@ export const removePost = (id) => async (dispatch) => {
 
 //Add post
 export const addPost = (post) => async (dispatch) => {
-    const config = {
-        headers: { "Content-Type": "application/json"}
-    }
+	const config = {
+		headers: { 'Content-Type': 'application/json' },
+	};
 
-
-    const body = JSON.stringify(post);
+	const body = JSON.stringify(post);
 	try {
-		const res = await axios.post(`${configUrl.url}/api/posts`, body, config);
+		const res = await axios.post(
+			`${configUrl.url}/api/posts`,
+			body,
+			config,
+		);
 		dispatch({
 			type: ADD_POST,
 			payload: res.data,
 		});
 		dispatch(setAlert('Post Added Successfull', 'success'));
+	} catch (err) {
+		if (err && err.response) {
+			return dispatch({
+				type: POST_ERROR,
+				payload: {
+					msg: err.response.statusText,
+					status: err.response.status,
+				},
+			});
+		}
+		dispatch(setAlert('Please try again', 'danger'));
+	}
+};
+
+//Get single post
+export const getSinglePost = (id) => async (dispatch) => {
+	try {
+		const res = await axios.get(`${configUrl.url}/api/posts/${id}`);
+		dispatch({
+			type: GET_SINGLE_POST,
+			payload: res.data,
+		});
 	} catch (err) {
 		if (err && err.response) {
 			return dispatch({

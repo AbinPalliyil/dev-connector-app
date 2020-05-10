@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const ProfileTop = ({ profile }) => {
 	const {
-		user: { name, avatar },
+		user: { name },
 		company,
 		location,
 		status,
